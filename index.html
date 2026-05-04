@@ -133,7 +133,6 @@
         .delay-100 { animation-delay: 100ms; }
         .delay-200 { animation-delay: 200ms; }
         .delay-300 { animation-delay: 300ms; }
-        .delay-400 { animation-delay: 400ms; }
         
         .stagger-item {
             opacity: 0;
@@ -388,6 +387,27 @@
                 </div>
             </section>
 
+            <!-- 4.5 ANALYZING / LOADING VIEW (RESTORED) -->
+            <section id="view-analyzing" class="view-section flex-col items-center justify-center h-full text-center py-10">
+                <div class="relative w-40 h-40 mb-8">
+                    <div class="absolute inset-0 rounded-2xl overflow-hidden border-4 border-white shadow-lg">
+                        <img id="scanning-img" class="w-full h-full object-cover filter brightness-75" src="" alt="Scanning" />
+                        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-brand-400/60 to-transparent h-[200%] w-full animate-[scan_2s_ease-in-out_infinite]"></div>
+                    </div>
+                    <div class="absolute -inset-4 border-2 border-dashed border-brand-200 rounded-3xl animate-[spin_8s_linear_infinite]"></div>
+                </div>
+                
+                <h2 class="text-2xl font-extrabold text-slate-900 mb-3 tracking-tight">Generating Report...</h2>
+                <div class="h-8 flex items-center justify-center">
+                    <p id="loading-status" class="text-brand-600 font-semibold text-sm transition-opacity duration-300">Initializing AI analysis...</p>
+                </div>
+                
+                <div class="w-48 h-1.5 bg-slate-200 rounded-full mt-6 overflow-hidden relative">
+                    <div class="absolute top-0 left-0 h-full bg-brand-500 rounded-full w-1/3 animate-[progress_2s_ease-in-out_infinite]"></div>
+                </div>
+                <p class="text-xs text-slate-400 mt-4">This usually takes about 10-20 seconds.</p>
+            </section>
+
             <!-- 5. SUCCESS VIEW (Email Delivery Confirmation) -->
             <section id="view-success" class="view-section flex-col items-center justify-center h-full text-center py-10 relative">
                 
@@ -430,24 +450,27 @@
         @keyframes shimmer {
             100% { transform: translateX(100%); }
         }
+        @keyframes scan {
+            0% { transform: translateY(-50%); }
+            50% { transform: translateY(0%); }
+            100% { transform: translateY(-50%); }
+        }
+        @keyframes progress {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(300%); }
+        }
     </style>
 
     <!-- Import Supabase JS Client via CDN -->
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-        // 1. PASTE YOUR SUPABASE URL AND ANON KEY HERE
-        const supabaseUrl = 'YOUR_SUPABASE_PROJECT_URL';
-        const supabaseAnonKey = 'YOUR_SUPABASE_ANON_KEY';
-        
-        const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-        // 2. Attach state and functions to window
+        // 1. Attach ALL state and UI functions to window FIRST so the UI never breaks.
         window.state = {
             view: 'view-landing',
             service: '',
             price: 0,
-            image: null, // This holds the base64 image data temporarily
+            image: null, 
             email: ''
         };
 
@@ -464,6 +487,8 @@
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     window.state.image = e.target.result;
+                    // Also set it on the analyzing page so it's ready
+                    document.getElementById('scanning-img').src = window.state.image;
                     window.navigate('view-services');
                 };
                 reader.readAsDataURL(file);
@@ -508,13 +533,56 @@
             window.navigate('view-payment');
         }
 
-        // Helper function to convert Base64 image back into a File format for Supabase Storage
+        // Restored Animation function
+        window.startLoadingAnimation = function() {
+            const texts = [
+                "Sending data securely...", 
+                "Analyzing facial architecture...", 
+                "Evaluating symmetry & shape...", 
+                "Finalizing personalized report..."
+            ];
+            let i = 0;
+            const statusEl = document.getElementById('loading-status');
+            
+            const loadingInterval = setInterval(() => {
+                statusEl.style.opacity = 0;
+                setTimeout(() => {
+                    i = (i + 1) % texts.length;
+                    statusEl.innerText = texts[i];
+                    statusEl.style.opacity = 1;
+                }, 300);
+            }, 2000);
+
+            // After 8 seconds of analyzing, move to the Success (Email Sent) View
+            setTimeout(() => {
+                clearInterval(loadingInterval);
+                window.navigate('view-success');
+            }, 8000);
+        }
+
+        // Helper function to convert Base64 to Blob
         async function convertBase64ToBlob(base64Data) {
             const response = await fetch(base64Data);
             return await response.blob();
         }
 
-        // 3. Submit to Supabase when they click "I have paid"
+        // 2. NOW safely try to initialize Supabase
+        let supabase = null;
+        try {
+            const supabaseUrl = 'YOUR_SUPABASE_PROJECT_URL';
+            const supabaseAnonKey = 'YOUR_SUPABASE_ANON_KEY';
+            
+            // Only try to connect if it looks like a real URL
+            if(supabaseUrl && supabaseUrl.startsWith('http')) {
+                supabase = createClient(supabaseUrl, supabaseAnonKey);
+            } else {
+                console.warn("Supabase keys not configured yet. UI will work in simulation mode.");
+            }
+        } catch (error) {
+            console.error("Supabase Init Error:", error);
+        }
+
+        // 3. Submit Flow
         window.executeSuccessFlow = async function() {
             const btn = document.querySelector('#view-payment button');
             const originalContent = btn.innerHTML;
@@ -524,50 +592,35 @@
             lucide.createIcons();
 
             try {
-                // A. Convert image and create a unique file name
-                const imageBlob = await convertBase64ToBlob(window.state.image);
-                const timestamp = Date.now();
-                const fileName = `${timestamp}_${window.state.email.replace(/[^a-zA-Z0-9]/g, '_')}.jpg`;
+                if (supabase) {
+                    // Actual Supabase Upload Logic
+                    const imageBlob = await convertBase64ToBlob(window.state.image);
+                    const timestamp = Date.now();
+                    const safeEmail = window.state.email.replace(/[^a-zA-Z0-9]/g, '_');
+                    const fileName = `${timestamp}_${safeEmail}.jpg`;
 
-                // B. Upload image to Supabase Storage ('Img' bucket)
-                const { data: uploadData, error: uploadError } = await supabase.storage
-                    .from('Img')
-                    .upload(fileName, imageBlob, {
-                        contentType: 'image/jpeg'
-                    });
+                    const { error: uploadError } = await supabase.storage.from('Img').upload(fileName, imageBlob, { contentType: 'image/jpeg' });
+                    if (uploadError) throw uploadError;
 
-                if (uploadError) throw uploadError;
+                    const { data: publicUrlData } = supabase.storage.from('Img').getPublicUrl(fileName);
+                    const imageUrl = publicUrlData.publicUrl;
 
-                // C. Get the public URL of the image we just uploaded
-                const { data: publicUrlData } = supabase.storage
-                    .from('Img')
-                    .getPublicUrl(fileName);
-                
-                const imageUrl = publicUrlData.publicUrl;
-
-                // D. Save order details to Supabase Database ('Core' table)
-                const { error: dbError } = await supabase
-                    .from('Core')
-                    .insert([
-                        { 
-                            email: window.state.email, 
-                            service: window.state.service, 
-                            price_paid: window.state.price,
-                            image_url: imageUrl,
-                            status: 'Pending'
-                        }
+                    const { error: dbError } = await supabase.from('Core').insert([
+                        { email: window.state.email, service: window.state.service, price_paid: window.state.price, image_url: imageUrl, status: 'Pending' }
                     ]);
+                    if (dbError) throw dbError;
+                } else {
+                    // Fake a short delay if testing locally without keys
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                }
 
-                if (dbError) throw dbError;
-
-                // Success!
-                console.log("Order saved to Supabase successfully!");
-                window.navigate('view-success');
+                // Go to the scanning animation screen
+                window.navigate('view-analyzing');
+                window.startLoadingAnimation();
 
             } catch (error) {
-                console.error("Supabase Error:", error);
+                console.error("Upload Error:", error);
                 alert("Something went wrong while saving your details. Please contact support.");
-                
                 btn.innerHTML = originalContent;
                 btn.disabled = false;
                 lucide.createIcons();
