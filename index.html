@@ -34,8 +34,11 @@
         .glass-solid { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.8); }
         .glass-dark { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.1); }
         .mask-edges { -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent); mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent); }
-        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-624px); } }
-        .animate-scroll { display: flex; width: max-content; animation: scroll 15s linear infinite; }
+        
+        /* Updated Carousel Animation: 5 items of 200px + 16px gap = 1080px */
+        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-1080px); } }
+        .animate-scroll { display: flex; width: max-content; animation: scroll 25s linear infinite; }
+        .carousel-track:hover .animate-scroll { animation-play-state: paused; }
     </style>
 </head>
 <body class="antialiased min-h-screen flex items-center justify-center sm:p-4">
@@ -65,42 +68,64 @@
                     Get a Professional Face Analysis <br>& Grooming Tips <i data-lucide="sparkles" class="w-4 h-4 text-amber-400 fill-amber-400"></i>
                 </p>
 
+                <!-- REAL RESULTS CAROUSEL WITH UPLOADED IMAGES -->
                 <div class="w-full flex flex-col items-center mb-8">
                     <p class="text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-5">Real Results</p>
                     <div class="w-full overflow-hidden relative carousel-track mask-edges pb-4">
                         <div class="animate-scroll flex gap-4">
-                            <!-- Carousel Items -->
-                            <div class="w-[140px] flex-shrink-0 h-44 glass rounded-3xl flex flex-col items-center justify-center p-4">
-                                <img src="https://i.pravatar.cc/150?img=47" class="w-16 h-16 rounded-full mb-3 border-2 border-white shadow-sm object-cover" alt="User" />
-                                <div class="bg-blue-100/80 text-blue-700 px-3 py-0.5 rounded-full text-sm font-black mb-1">9.2/10</div>
-                                <p class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">Main Character</p>
+                            <!-- Set 1 of Cards -->
+                            <div class="w-[200px] flex-shrink-0 h-[260px] glass rounded-3xl overflow-hidden shadow-sm relative group cursor-pointer hover:-translate-y-1 transition-transform">
+                                <img src="WhatsApp%20Image%202026-05-04%20at%201.52.22%20PM.jpg" class="w-full h-full object-cover object-top" alt="Face Report" />
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                                    <p class="text-white font-bold text-xs">Facial Beauty Report</p>
+                                </div>
                             </div>
-                            <div class="w-[140px] flex-shrink-0 h-44 glass rounded-3xl flex flex-col items-center justify-center p-4">
-                                <img src="https://i.pravatar.cc/150?img=32" class="w-16 h-16 rounded-full mb-3 border-2 border-white shadow-sm object-cover" alt="User" />
-                                <div class="bg-pink-100/80 text-pink-700 px-3 py-0.5 rounded-full text-sm font-black mb-1">8.8/10</div>
-                                <p class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">Classic Beauty</p>
+                            <div class="w-[200px] flex-shrink-0 h-[260px] glass rounded-3xl overflow-hidden shadow-sm relative group cursor-pointer hover:-translate-y-1 transition-transform">
+                                <img src="WhatsApp%20Image%202026-05-04%20at%201.52.22%20PM%20(1).jpg" class="w-full h-full object-cover object-top" alt="Hairstyle Analysis" />
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                                    <p class="text-white font-bold text-xs">Hairstyle Guide</p>
+                                </div>
                             </div>
-                            <div class="w-[140px] flex-shrink-0 h-44 glass rounded-3xl flex flex-col items-center justify-center p-4">
-                                <img src="https://i.pravatar.cc/150?img=11" class="w-16 h-16 rounded-full mb-3 border-2 border-white shadow-sm object-cover" alt="User" />
-                                <div class="bg-indigo-100/80 text-indigo-700 px-3 py-0.5 rounded-full text-sm font-black mb-1">9.5/10</div>
-                                <p class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">Ethereal Glow</p>
+                            <div class="w-[200px] flex-shrink-0 h-[260px] glass rounded-3xl overflow-hidden shadow-sm relative group cursor-pointer hover:-translate-y-1 transition-transform">
+                                <img src="WhatsApp%20Image%202026-05-04%20at%201.52.23%20PM%20(1).jpg" class="w-full h-full object-cover object-top" alt="Color Palette" />
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                                    <p class="text-white font-bold text-xs">Color Palette Analysis</p>
+                                </div>
                             </div>
-                            <div class="w-[140px] flex-shrink-0 h-44 glass rounded-3xl flex flex-col items-center justify-center p-4">
-                                <img src="https://i.pravatar.cc/150?img=68" class="w-16 h-16 rounded-full mb-3 border-2 border-white shadow-sm object-cover" alt="User" />
-                                <div class="bg-emerald-100/80 text-emerald-700 px-3 py-0.5 rounded-full text-sm font-black mb-1">8.9/10</div>
-                                <p class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">Sharp Features</p>
+                            <div class="w-[200px] flex-shrink-0 h-[260px] glass rounded-3xl overflow-hidden shadow-sm relative group cursor-pointer hover:-translate-y-1 transition-transform">
+                                <img src="WhatsApp%20Image%202026-05-04%20at%201.52.22%20PM%20(2).jpeg" class="w-full h-full object-cover object-top" alt="Makeup Comparison" />
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                                    <p class="text-white font-bold text-xs">Undertone & Makeup</p>
+                                </div>
                             </div>
-                             <div class="w-[140px] flex-shrink-0 h-44 glass rounded-3xl flex flex-col items-center justify-center p-4">
-                                <img src="https://i.pravatar.cc/150?img=47" class="w-16 h-16 rounded-full mb-3 border-2 border-white shadow-sm object-cover" alt="User" />
-                                <div class="bg-blue-100/80 text-blue-700 px-3 py-0.5 rounded-full text-sm font-black mb-1">9.2/10</div>
-                                <p class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">Main Character</p>
+                            <div class="w-[200px] flex-shrink-0 h-[260px] glass rounded-3xl overflow-hidden shadow-sm relative group cursor-pointer hover:-translate-y-1 transition-transform">
+                                <img src="WhatsApp%20Image%202026-05-04%20at%201.52.23%20PM.jpg" class="w-full h-full object-cover object-top" alt="Hairstyle Guide 2" />
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                                    <p class="text-white font-bold text-xs">Capsule Styling Match</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Set 2 (Duplicated for infinite scroll) -->
+                            <div class="w-[200px] flex-shrink-0 h-[260px] glass rounded-3xl overflow-hidden shadow-sm relative group cursor-pointer hover:-translate-y-1 transition-transform">
+                                <img src="WhatsApp%20Image%202026-05-04%20at%201.52.22%20PM.jpg" class="w-full h-full object-cover object-top" alt="Face Report" />
+                            </div>
+                            <div class="w-[200px] flex-shrink-0 h-[260px] glass rounded-3xl overflow-hidden shadow-sm relative group cursor-pointer hover:-translate-y-1 transition-transform">
+                                <img src="WhatsApp%20Image%202026-05-04%20at%201.52.22%20PM%20(1).jpg" class="w-full h-full object-cover object-top" alt="Hairstyle Analysis" />
+                            </div>
+                            <div class="w-[200px] flex-shrink-0 h-[260px] glass rounded-3xl overflow-hidden shadow-sm relative group cursor-pointer hover:-translate-y-1 transition-transform">
+                                <img src="WhatsApp%20Image%202026-05-04%20at%201.52.23%20PM%20(1).jpg" class="w-full h-full object-cover object-top" alt="Color Palette" />
+                            </div>
+                            <div class="w-[200px] flex-shrink-0 h-[260px] glass rounded-3xl overflow-hidden shadow-sm relative group cursor-pointer hover:-translate-y-1 transition-transform">
+                                <img src="WhatsApp%20Image%202026-05-04%20at%201.52.22%20PM%20(2).jpeg" class="w-full h-full object-cover object-top" alt="Makeup Comparison" />
+                            </div>
+                            <div class="w-[200px] flex-shrink-0 h-[260px] glass rounded-3xl overflow-hidden shadow-sm relative group cursor-pointer hover:-translate-y-1 transition-transform">
+                                <img src="WhatsApp%20Image%202026-05-04%20at%201.52.23%20PM.jpg" class="w-full h-full object-cover object-top" alt="Hairstyle Guide 2" />
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="w-full mt-auto">
-                    <!-- Flow change: Landing now goes straight to Upload -->
                     <button onclick="changeView('view-upload')" class="group w-full bg-blue-600/90 backdrop-blur-sm text-white py-5 rounded-[2rem] font-black text-lg flex items-center justify-center gap-3 hover:bg-blue-600 active:scale-[0.98] transition-all shadow-[0_8px_30px_rgb(37,99,235,0.3)] border border-blue-400/30">
                         Analyze My Face 
                         <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1.5 transition-transform duration-300"></i>
@@ -108,7 +133,7 @@
                 </div>
             </section>
 
-            <!-- 2. UPLOAD VIEW (Happens FIRST now) -->
+            <!-- 2. UPLOAD VIEW -->
             <section id="view-upload" class="hidden flex flex-col text-center animate-in zoom-in-95 duration-300 h-full">
                 <h3 class="text-3xl font-black mb-6 leading-tight text-slate-800 tracking-tight">Upload clear picture<br>of your face.</h3>
                 
@@ -149,29 +174,38 @@
                 </button>
             </section>
 
-            <!-- 3. SERVICE SELECTION & PAYMENT (Happens AFTER upload) -->
+            <!-- 3. SERVICE SELECTION & PAYMENT -->
             <section id="view-services" class="hidden animate-in fade-in slide-in-from-right-4 duration-300">
                 <h3 class="text-2xl font-black mb-8 text-center uppercase tracking-tighter">Choose Analysis</h3>
                 
+                <!-- NEW 3D ICON GRID -->
                 <div class="grid grid-cols-2 gap-4 mb-8">
-                    <div onclick="initiatePayment('Hair Analysis', 29)" class="glass p-5 rounded-[2rem] text-center hover:bg-white/60 hover:border-blue-400/50 cursor-pointer transition-all group">
-                        <div class="aspect-square bg-white/50 backdrop-blur-sm rounded-2xl mb-4 flex items-center justify-center shadow-sm group-hover:bg-white transition"><i data-lucide="scissors" class="w-7 h-7 text-blue-600"></i></div>
-                        <p class="font-bold text-sm text-slate-700">Hair analysis</p>
-                        <p class="text-blue-600 font-black mt-1">₹29</p>
-                    </div>
                     <div onclick="initiatePayment('Face Analysis', 29)" class="glass p-5 rounded-[2rem] text-center hover:bg-white/60 hover:border-blue-400/50 cursor-pointer transition-all group">
-                        <div class="aspect-square bg-white/50 backdrop-blur-sm rounded-2xl mb-4 flex items-center justify-center shadow-sm group-hover:bg-white transition"><i data-lucide="user" class="w-7 h-7 text-blue-600"></i></div>
-                        <p class="font-bold text-sm text-slate-700">Face analysis</p>
+                        <div class="aspect-square bg-white/50 backdrop-blur-sm rounded-2xl mb-4 flex items-center justify-center shadow-sm group-hover:bg-white transition relative">
+                            <img src="https://img.icons8.com/3d-fluency/94/face-id.png" class="w-12 h-12 drop-shadow-md group-hover:scale-110 transition-transform" alt="Face" />
+                        </div>
+                        <p class="font-bold text-sm text-slate-700">Face Analysis</p>
                         <p class="text-blue-600 font-black mt-1">₹29</p>
                     </div>
-                    <div onclick="initiatePayment('Skin Reading', 29)" class="glass p-5 rounded-[2rem] text-center hover:bg-white/60 hover:border-blue-400/50 cursor-pointer transition-all group">
-                        <div class="aspect-square bg-white/50 backdrop-blur-sm rounded-2xl mb-4 flex items-center justify-center shadow-sm group-hover:bg-white transition"><i data-lucide="droplets" class="w-7 h-7 text-blue-600"></i></div>
-                        <p class="font-bold text-sm text-slate-700">Skin reading</p>
+                    <div onclick="initiatePayment('Skincare Analysis', 29)" class="glass p-5 rounded-[2rem] text-center hover:bg-white/60 hover:border-blue-400/50 cursor-pointer transition-all group">
+                        <div class="aspect-square bg-white/50 backdrop-blur-sm rounded-2xl mb-4 flex items-center justify-center shadow-sm group-hover:bg-white transition relative">
+                            <img src="https://img.icons8.com/3d-fluency/94/sparkling.png" class="w-12 h-12 drop-shadow-md group-hover:scale-110 transition-transform" alt="Skincare" />
+                        </div>
+                        <p class="font-bold text-sm text-slate-700">Skincare Analysis</p>
                         <p class="text-blue-600 font-black mt-1">₹29</p>
                     </div>
-                    <div onclick="initiatePayment('Style Analysis', 29)" class="glass p-5 rounded-[2rem] text-center hover:bg-white/60 hover:border-blue-400/50 cursor-pointer transition-all group">
-                        <div class="aspect-square bg-white/50 backdrop-blur-sm rounded-2xl mb-4 flex items-center justify-center shadow-sm group-hover:bg-white transition"><i data-lucide="shirt" class="w-7 h-7 text-blue-600"></i></div>
-                        <p class="font-bold text-sm text-slate-700">Style analysis</p>
+                    <div onclick="initiatePayment('Hairstyle Analysis', 29)" class="glass p-5 rounded-[2rem] text-center hover:bg-white/60 hover:border-blue-400/50 cursor-pointer transition-all group">
+                        <div class="aspect-square bg-white/50 backdrop-blur-sm rounded-2xl mb-4 flex items-center justify-center shadow-sm group-hover:bg-white transition relative">
+                            <img src="https://img.icons8.com/3d-fluency/94/hair-dryer.png" class="w-12 h-12 drop-shadow-md group-hover:scale-110 transition-transform" alt="Hair" />
+                        </div>
+                        <p class="font-bold text-sm text-slate-700">Hairstyle Analysis</p>
+                        <p class="text-blue-600 font-black mt-1">₹29</p>
+                    </div>
+                    <div onclick="initiatePayment('Clothing Analysis', 29)" class="glass p-5 rounded-[2rem] text-center hover:bg-white/60 hover:border-blue-400/50 cursor-pointer transition-all group">
+                        <div class="aspect-square bg-white/50 backdrop-blur-sm rounded-2xl mb-4 flex items-center justify-center shadow-sm group-hover:bg-white transition relative">
+                            <img src="https://img.icons8.com/3d-fluency/94/t-shirt.png" class="w-12 h-12 drop-shadow-md group-hover:scale-110 transition-transform" alt="Clothing" />
+                        </div>
+                        <p class="font-bold text-sm text-slate-700">Clothing Analysis</p>
                         <p class="text-blue-600 font-black mt-1">₹29</p>
                     </div>
                 </div>
@@ -199,9 +233,7 @@
             <!-- 5. RESULTS VIEW & DOWNLOAD -->
             <section id="view-result" class="hidden animate-in fade-in slide-in-from-bottom-8 duration-1000 flex flex-col pb-4 h-full">
                 
-                <!-- The container we will screenshot -->
                 <div id="downloadable-card" class="bg-white rounded-[2.5rem] shadow-xl overflow-hidden relative border border-slate-100 flex-grow">
-                    <!-- Clean gradient background for canvas rendering -->
                     <div class="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-purple-50 opacity-50 pointer-events-none"></div>
 
                     <div class="p-8 pt-10 text-center text-slate-900 border-b border-slate-100 relative z-10">
@@ -230,7 +262,6 @@
                     </div>
                 </div>
 
-                <!-- Action Buttons (Not included in the screenshot) -->
                 <div class="flex gap-3 mt-6">
                     <button onclick="downloadImage()" class="flex-1 bg-blue-600 text-white py-4 rounded-2xl font-bold uppercase text-xs tracking-widest shadow-lg shadow-blue-200 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
                         <i data-lucide="download" class="w-4 h-4"></i> Download Card
@@ -276,7 +307,6 @@
                     document.getElementById('upload-placeholder').classList.add('hidden');
                     document.getElementById('preview-container').classList.remove('hidden');
                     
-                    // Show "Choose Analysis Type" button instead of direct pay
                     document.getElementById('btn-next-service').classList.remove('hidden');
                 };
                 reader.readAsDataURL(file);
@@ -288,8 +318,7 @@
             state.service = serviceName;
             state.price = price;
             
-            // If running without Razorpay API Key in dev, bypass to AI
-            if(razorpayTestKey === rzp_test_SlDkQNrUBPd3z3 || !razorpayTestKey) {
+            if(razorpayTestKey === "rzp_test_YourTestKeyHere" || !razorpayTestKey) {
                 console.log("No Razorpay key found, bypassing payment for testing.");
                 executeSuccessFlow();
                 return;
@@ -297,13 +326,12 @@
 
             var options = {
                 "key": razorpayTestKey,
-                "amount": price * 100, // Amount in paise
+                "amount": price * 100, 
                 "currency": "INR",
                 "name": "FaceScore AI",
                 "description": serviceName,
                 "theme": { "color": "#2563eb" },
                 "handler": function (response) {
-                    // PAYMENT SUCCESS
                     console.log("Payment ID: ", response.razorpay_payment_id);
                     executeSuccessFlow();
                 },
@@ -326,7 +354,6 @@
         // STEP 3: Run Gemini AI
         async function runAIAnalysis() {
             if (!geminiApiKey) {
-                // Mock result if no API key is provided
                 setTimeout(() => {
                     document.getElementById('result-score').innerText = "9.2";
                     document.getElementById('result-vibe').innerText = "✨ Main Character Energy";
@@ -406,9 +433,8 @@
         function downloadImage() {
             const resultCard = document.getElementById('downloadable-card');
             
-            // Create a temporary clone to ensure styles apply correctly without scroll issues
             html2canvas(resultCard, {
-                scale: 2, // High resolution
+                scale: 2, 
                 useCORS: true,
                 backgroundColor: "#ffffff",
                 logging: false
