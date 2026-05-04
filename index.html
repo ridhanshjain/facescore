@@ -289,7 +289,7 @@
             state.price = price;
             
             // If running without Razorpay API Key in dev, bypass to AI
-            if(razorpayTestKey === "rzp_test_YourTestKeyHere" || !razorpayTestKey) {
+            if(razorpayTestKey === rzp_test_SlDkQNrUBPd3z3 || !razorpayTestKey) {
                 console.log("No Razorpay key found, bypassing payment for testing.");
                 executeSuccessFlow();
                 return;
